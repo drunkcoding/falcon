@@ -27,6 +27,7 @@
 #include "falcon/meas/TrafficResultsToFile.h"
 #include "falcon/meas/NetsyncSlave.h"
 #include "falcon/common/BufferedFileSink.h"
+#include "falcon/common/AsyncFileSink.h"
 #include "falcon/common/SignalManager.h"
 
 #include "falcon/common/SystemInfo.h"
@@ -85,12 +86,17 @@ int main(int argc, char** argv) {
 
   TrafficGenerator trafficGenerator;
 
-#define USE_BUFFERED_SINK
+// #define USE_BUFFERED_SINK
+#define USE_AYNC_SINK
 #ifdef USE_BUFFERED_SINK
   BufferedFileSink<cf_t> sink;
   size_t sz = SystemInfo::getAvailableRam() - 512*1024*1024;  //allocate all RAM but 512MB
   cout << "Allocating memory sample buffer of " << sz << " B..." << endl;
   sink.allocate(sz);
+#endif
+#ifdef USE_AYNC_SINK
+  AsyncFileSink<cf_t> sink;
+  cout << "Allocating async call for file write" << endl;
 #else
   FileSink<cf_t> sink;
 #endif
