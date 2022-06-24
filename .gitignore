@@ -10,3 +10,5 @@ _*
 # Other local files
 CMakeLists.txt.user
 
+build/
+
